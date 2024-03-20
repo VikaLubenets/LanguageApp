@@ -2,17 +2,30 @@ import { redirect } from "next/navigation";
 import { FeedWrapper } from "@/components/feed-wrapper";
 import { StickyWrapper } from "@/components/sticky-wrapper";
 import { UserProgress } from "@/components/user-progress";
-import { getUserProgress } from "@/db/queries";
+import { getCourseProgress, getLessonPercentage, getUnits, getUserProgress } from "@/db/queries";
 import { Header } from "./header";
+import { json } from "stream/consumers";
+import { Unit } from "./unit";
 
 const LearnPage = async () => {
   const userProgressData = getUserProgress();
+  const courseProgressData = getCourseProgress();
+  const lessonPercentageData = getLessonPercentage();
+  const unitsData = getUnits();
 
-  const [ userProgress ] = await Promise.all([
-    userProgressData
+  const [ 
+    userProgress, 
+    courseProgress, 
+    lessonPercentage,
+     units 
+    ] = await Promise.all([
+    userProgressData,
+    courseProgressData,
+    lessonPercentageData,
+    unitsData,
   ])
 
-  if (!userProgress || !userProgress.activeCourse) {
+  if (!userProgress || !userProgress.activeCourse ||!courseProgress) {
     redirect("/courses");
   }
 
@@ -20,14 +33,29 @@ const LearnPage = async () => {
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickyWrapper>
         <UserProgress 
-          activeCourse={{ title: "A1 nivel", imageSrc: '/A1level.svg'}}
-          hearts={5}
-          points={100}
+          activeCourse={userProgress.activeCourse}
+          hearts={userProgress.hearts}
+          points={userProgress.points}
           hasActiveSubscription={false}
         />
       </StickyWrapper>
       <FeedWrapper>
-        <Header title="A1 nivel"/>
+        <Header title={userProgress.activeCourse.title}/>
+        {units.map(unit => {
+          return(
+            <div key={unit.id} className="mb-10">
+              <Unit 
+                id={unit.id}
+                order={unit.order}
+                description={unit.description}
+                title={unit.title}
+                lessons={unit.lessons}
+                activeLesson={courseProgress.activeLesson}
+                activeLessonPercentage={lessonPercentage}
+              />
+          </div>
+          )
+        })}
       </FeedWrapper>
     </div>
   )
