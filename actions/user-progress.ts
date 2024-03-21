@@ -7,6 +7,7 @@ import { auth, currentUser } from "@clerk/nextjs"
 import { challengeProgress, challenges, userProgress } from "@/db/schema"
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { POINTS_TO_REFIL } from "@/lib/constants";
 
 export const upserUseProgress = async (courseId: number) => {
   const { userId } = await auth();
@@ -105,3 +106,30 @@ export const reduceHearts = async (challengeId: number) => {
     revalidatePath(`/lesson/${lessonId}`);
 
 }
+
+
+export const refillHearts = async () => {
+  const currentUserProgress = await getUserProgress();
+
+  if (!currentUserProgress) {
+    throw new Error("User progress not found");
+  }
+
+  if (currentUserProgress.hearts === 5) {
+    throw new Error("Hearts are already full");
+  }
+
+  if (currentUserProgress.points < POINTS_TO_REFIL) {
+    throw new Error("Not enough points");
+  }
+
+  await db.update(userProgress).set({
+    hearts: 5,
+    points: currentUserProgress.points - POINTS_TO_REFIL,
+  }).where(eq(userProgress.userId, currentUserProgress.userId));
+
+  revalidatePath("/shop");
+  revalidatePath("/learn");
+  revalidatePath("/quests");
+  revalidatePath("/leaderboard");
+};

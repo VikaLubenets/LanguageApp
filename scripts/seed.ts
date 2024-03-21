@@ -107,6 +107,27 @@ const main = async () => {
         order: 3,
         question: "Which one of these is the 'women'?"
       },
+      {
+        id: 4,
+        lessonId: 2,
+        type: "SELECT",
+        order: 1,
+        question: "Which one of these is the 'man'?"
+      },
+      {
+        id: 5,
+        lessonId: 2,
+        type: "ASSIST",
+        order: 2,
+        question: "The man"
+      },
+      {
+        id: 6,
+        lessonId: 2,
+        type: "SELECT",
+        order: 3,
+        question: "Which one of these is the 'women'?"
+      },
     ]);
 
     await db.insert(schema.challengeOptions).values([
@@ -174,6 +195,75 @@ const main = async () => {
       {
         id: 9,
         challengeId: 3,
+        imageSrc: "/hearts.svg",
+        correct: false,
+        text: "la chica",
+        audioSrc: "/es_chica.mp3",
+      },
+      {
+        id: 10,
+        challengeId: 4,
+        imageSrc: "/coffee2.svg",
+        correct: true,
+        text: "el hombre",
+        audioSrc: "/es_hombre.mp3",
+      },
+      {
+        id: 11,
+        challengeId: 4,
+        imageSrc: "/learn.svg",
+        correct: false,
+        text: "la mujer",
+        audioSrc: "/es_mujer.mp3",
+      },
+      {
+        id: 12,
+        challengeId: 4,
+        imageSrc: "/hearts.svg",
+        correct: false,
+        text: "la chica",
+        audioSrc: "/es_chica.mp3",
+      },
+      {
+        id: 13,
+        challengeId: 5,
+        correct: true,
+        text: "el hombre",
+        audioSrc: "/es_hombre.mp3",
+      },
+      {
+        id: 14,
+        challengeId: 5,
+        correct: false,
+        text: "la mujer",
+        audioSrc: "/es_mujer.mp3",
+      },
+      {
+        id: 15,
+        challengeId: 5,
+        correct: false,
+        text: "la chica",
+        audioSrc: "/es_chica.mp3",
+      },
+      {
+        id: 16,
+        challengeId: 6,
+        imageSrc: "/coffee2.svg",
+        correct: false,
+        text: "el hombre",
+        audioSrc: "/es_hombre.mp3",
+      },
+      {
+        id: 17,
+        challengeId: 6,
+        imageSrc: "/learn.svg",
+        correct: true,
+        text: "la mujer",
+        audioSrc: "/es_mujer.mp3",
+      },
+      {
+        id: 18,
+        challengeId: 6,
         imageSrc: "/hearts.svg",
         correct: false,
         text: "la chica",
