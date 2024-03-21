@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { FeedWrapper } from "@/components/feed-wrapper";
 import { StickyWrapper } from "@/components/sticky-wrapper";
 import { UserProgress } from "@/components/user-progress";
-import { getCourseProgress, getLessonPercentage, getUnits, getUserProgress } from "@/db/queries";
+import { getCourseProgress, getLessonPercentage, getUnits, getUserProgress, getUserSubscription } from "@/db/queries";
 import { Header } from "./header";
 import { json } from "stream/consumers";
 import { Unit } from "./unit";
@@ -12,17 +12,20 @@ const LearnPage = async () => {
   const courseProgressData = getCourseProgress();
   const lessonPercentageData = getLessonPercentage();
   const unitsData = getUnits();
+  const userSubscriptionData = getUserSubscription();
 
   const [ 
     userProgress, 
     courseProgress, 
     lessonPercentage,
-     units 
+     units,
+     userSubscription 
     ] = await Promise.all([
     userProgressData,
     courseProgressData,
     lessonPercentageData,
     unitsData,
+    userSubscriptionData
   ])
 
   if (!userProgress || !userProgress.activeCourse ||!courseProgress) {
@@ -36,7 +39,7 @@ const LearnPage = async () => {
           activeCourse={userProgress.activeCourse}
           hearts={userProgress.hearts}
           points={userProgress.points}
-          hasActiveSubscription={false}
+          hasActiveSubscription={!!userSubscription?.isActive}
         />
       </StickyWrapper>
       <FeedWrapper>
