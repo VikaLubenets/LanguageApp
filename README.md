@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Project: 'Language learning app'
 
-## Getting Started
+## Overview: 
+"Spanish App" is a single-page application designed to facilitate the learning of the Spanish language. The application, built on the React framework Next.js and deployed on Vercel, integrates various cutting-edge technologies to deliver an immersive and engaging learning experience. The project incorporates the following functionalities:
+  * Authentication via Clerk service;
+  * Gamified lesson mechanics;
+  * Pro subscription mode with unlimited "hearts" attempts;
+  * Display of top 10 players ranked by progress achievement;
+  * Implementation of practice mode in completed lessons to earn points without losing hearts, aimed at revision and reinforcement of learning material.
 
-First, run the development server:
+## Pages:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+* Landing page
+* Courses page
+* Course learning page
+* Lesson page
+* Leaderboard page
+* Quizzes ppage
+* Shop page
+* Admin page
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Key Technologies:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* Next.js
+* React
+* Typescript
+* NeonDatabase Serverless
+* React Admin
+* Tailwind
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Project Details:
 
-## Learn More
+Deployment: [Link to Deployment](https://language-app-vert.vercel.app/)
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Code Repository: [Link to Code](https://github.com/VikaLubenets/LanguageApp)
