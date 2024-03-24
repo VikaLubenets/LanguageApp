@@ -81,7 +81,7 @@ const App = () => {
       />
       <Resource 
         name="vocabularyLists"
-        recordRepresentation="text"
+        recordRepresentation="title"
         list={VocabularyList}
         create={VocabularyCreate}
         edit={VocabularyEdit}
@@ -89,7 +89,7 @@ const App = () => {
       />
      <Resource 
         name="words"
-        recordRepresentation="text"
+        recordRepresentation="title"
         list={WordList}
         create={WordCreate}
         edit={WordEdit}
