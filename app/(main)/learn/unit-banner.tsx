@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { NotebookText } from "lucide-react";
 import Link from "next/link";
-import { RowDescriptionMessage } from "pg-protocol/dist/messages";
 
 type Props = {
   title: string;

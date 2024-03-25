@@ -4,7 +4,6 @@ export const WordEdit = () => {
   return(
     <Edit>
       <SimpleForm>
-        <NumberInput source="id"/>
         <TextInput 
           source="word" 
           validate={[required()]} 

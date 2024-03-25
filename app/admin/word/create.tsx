@@ -4,7 +4,6 @@ export const WordCreate = () => {
   return(
     <Create>
       <SimpleForm>
-        <NumberInput source="id"/>
         <TextInput 
           source="word" 
           validate={[required()]} 
