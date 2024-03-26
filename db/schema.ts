@@ -117,3 +117,32 @@ export const userSubscription = pgTable("user_subscription", {
   stripePriceId: text("stripe_price_id").notNull(),
   stripeCurrentPeriodEnd: timestamp("stripe_current_period_end").notNull(),
 });
+
+export const vocabularyLists = pgTable("vocabulary_lists", {
+  id: serial('id').primaryKey(),
+  title: text("title").notNull(),
+  level: text("level").notNull(),
+  imageSrc: text("image_src").notNull(),
+});
+
+export const vocabularyListsRelations = relations(vocabularyLists, ({ many }) => ({
+  words: many(words),
+}));
+
+export const words = pgTable("words", {
+  id: serial("id").primaryKey(),
+  vocabularyId: integer("vocabulary_id").references(() => vocabularyLists.id, { onDelete: "cascade" }).notNull(),
+  word: text("word").notNull(),
+  translationEng: text("translation_eng").notNull(),
+  translationRus: text("translation_rus").notNull(),
+  order: integer("order").notNull(),
+  imageSrc: text("image_src"),
+  audioSrc: text("audio_src"),
+});
+
+export const wordsRelations = relations(words, ({ one }) => ({
+  vocabularyList: one(vocabularyLists, {
+    fields: [words.vocabularyId],
+    references: [vocabularyLists.id],
+  }),
+}));

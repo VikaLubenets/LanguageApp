@@ -28,6 +28,16 @@ import { ChallengeOptionList } from "./challengeOption/list";
 import { ChallengeOptionEdit } from "./challengeOption/edit";
 import { ChallengeOptionCreate } from "./challengeOption/create";
 
+
+import { VocabularyList } from "./vocabularyList/list";
+import { VocabularyCreate } from "./vocabularyList/create";
+import { VocabularyEdit } from "./vocabularyList/edit";
+
+
+import { WordList } from "./word/list";
+import { WordCreate } from "./word/create";
+import { WordEdit } from "./word/edit";
+
 const dataProvider = simpleRestProvider("/api");
 
 const App = () => {
@@ -68,6 +78,22 @@ const App = () => {
         create={ChallengeOptionCreate}
         edit={ChallengeOptionEdit}
         options={{label: "Challenge Options"}}
+      />
+      <Resource 
+        name="vocabularyLists"
+        recordRepresentation="title"
+        list={VocabularyList}
+        create={VocabularyCreate}
+        edit={VocabularyEdit}
+        options={{label: "Vocabulary Lists"}}
+      />
+     <Resource 
+        name="words"
+        recordRepresentation="title"
+        list={WordList}
+        create={WordCreate}
+        edit={WordEdit}
+        options={{label: "Words"}}
       />
     </Admin>
   )

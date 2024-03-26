@@ -10,7 +10,8 @@ import {
   challenges, 
   challengeOptions, 
   challengeProgress, 
-  userSubscription
+  userSubscription,
+  vocabularyLists
 } from "./schema";
 
 export const getCourses = cache(async () => {
@@ -263,3 +264,22 @@ export const getTopTenUsers = cache(async () => {
 
   return data;
 });
+
+export const getVocabularyLists = cache(async () => {
+  const data = await db.query.vocabularyLists.findMany();
+
+  return data;
+})
+
+export const getVocabularyListById = cache( async (vocabularyId: number) => {
+  const data = await db.query.vocabularyLists.findFirst({
+    where: eq(vocabularyLists.id, vocabularyId),
+    with: {
+      words: {
+        orderBy: (words, { asc }) => [asc(words.order)],
+        }
+      }
+    })
+  
+  return data;
+  });

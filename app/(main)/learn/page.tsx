@@ -4,7 +4,6 @@ import { StickyWrapper } from "@/components/sticky-wrapper";
 import { UserProgress } from "@/components/user-progress";
 import { getCourseProgress, getLessonPercentage, getUnits, getUserProgress, getUserSubscription } from "@/db/queries";
 import { Header } from "./header";
-import { json } from "stream/consumers";
 import { Unit } from "./unit";
 import { Promo } from "@/components/promo";
 import { Quests } from "@/components/quests";
