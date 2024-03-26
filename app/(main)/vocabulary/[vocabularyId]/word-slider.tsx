@@ -3,6 +3,7 @@
 import { words } from "@/db/schema"
 import { Check, Undo2, X } from "lucide-react";
 import { useState } from "react";
+import { Header } from "./header";
 import { WordCard } from "./word-card";
 import { WordResult } from "./word-result";
 
@@ -59,24 +60,14 @@ export const WordSlider = ({
     );
   }
 
-
   return (
     <>
       <div className="w-full max-w-[1140px] pr-6 flex flex-col gap-6 items-center justify-center">
-        <div className="flex items-center justify-between gap-5 w-full text-sm lg:text-base">
-          <div className="flex gap-2 h-[20px] text-rose-500 font-bold">
-            <h3>Still learning</h3>
-            <div>
-              {learningWords.length || 0}
-            </div>
-          </div>
-          <div className="flex gap-2 h-[20px] text-green-500 font-bold">
-            <h3>Learned</h3>
-            <div>
-              {learnedWords.length || 0}
-            </div>
-          </div>
-        </div>
+        <Header 
+          learningWordsCount={learningWords.length} 
+          learnedWordsCount={learnedWords.length} 
+          wordsTotalCount={words.length} 
+        />
         <WordCard
             word={words[currentCardIndex].word}
             translationEng={words[currentCardIndex].translationEng}
