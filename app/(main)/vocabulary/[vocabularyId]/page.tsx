@@ -1,6 +1,6 @@
 import { getVocabularyListById } from "@/db/queries";
 import { redirect } from "next/navigation";
-import { WordCard } from "./word-card";
+import { WordSlider } from "./word-slider";
 
 
 type Props = {
@@ -25,19 +25,7 @@ const VocabularyIdPage = async ({params}: Props) => {
       <h1 className="text-center font-bold text-neutral-800 text-2xl my-6">
         Words training
       </h1>
-      {
-        vocabularyList.words.map(word => {
-          return (
-            <WordCard 
-              word={word.word}
-              translationEng={word.translationEng}
-              translationRus={word.translationRus}
-              imageSrc={word.imageSrc || ''}
-              audioSrc={word.audioSrc || ''}
-            />
-          )
-        })
-      }
+      <WordSlider words={vocabularyList.words}/>
     </div>
   )
 }

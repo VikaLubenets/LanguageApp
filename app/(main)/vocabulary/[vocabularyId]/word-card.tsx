@@ -28,7 +28,7 @@ export const WordCard = ({
 
   return (
     <div
-      className={`relative border-2 rounded-xl border-b-4 hover:bg-black/5 cursor-pointer active:border-b-2 shadow-md w-64 h-80 p-4 transition-transform transform-gpu ${
+      className={`relative w-full border-2 rounded-xl border-b-4 hover:bg-black/5 cursor-pointer active:border-b-2 shadow-md h-80 p-4 transition-transform transform-gpu ${
         flipped ? "-rotate-y-180" : ""
       }`}
       onClick={handleFlip}
