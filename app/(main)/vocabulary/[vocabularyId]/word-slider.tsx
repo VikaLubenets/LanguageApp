@@ -3,7 +3,7 @@
 import { words } from "@/db/schema"
 import { Check, Undo2, X } from "lucide-react";
 import { useState } from "react";
-import { Header } from "./header";
+import { HeaderSlider } from "./header-slider";
 import { WordCard } from "./word-card";
 import { WordResult } from "./word-result";
 
@@ -63,12 +63,13 @@ export const WordSlider = ({
   return (
     <>
       <div className="w-full max-w-[1140px] pr-6 flex flex-col gap-6 items-center justify-center">
-        <Header 
+        <HeaderSlider 
           learningWordsCount={learningWords.length} 
           learnedWordsCount={learnedWords.length} 
           wordsTotalCount={words.length} 
         />
         <WordCard
+            key={currentCardIndex}
             word={words[currentCardIndex].word}
             translationEng={words[currentCardIndex].translationEng}
             translationRus={words[currentCardIndex].translationRus}

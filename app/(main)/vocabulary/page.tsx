@@ -26,7 +26,7 @@ const VocabularyPage = async () => {
       <p className="text-muted-foreground text-lg mb-6">
         Expand your vocabulary with these amazing trainings!
       </p>
-      <VocabularyDashboard />
+      {/* <VocabularyDashboard /> */}
       <VocabularyList vocabularyLists={vocabularyLists}/>
     </div>
   );

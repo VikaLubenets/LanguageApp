@@ -1,5 +1,8 @@
 import { getVocabularyListById } from "@/db/queries";
+import { useExitModal } from "@/store/use-exit-modal";
+import { X } from "lucide-react";
 import { redirect } from "next/navigation";
+import { Header } from "./header";
 import { WordSlider } from "./word-slider";
 
 
@@ -22,9 +25,7 @@ const VocabularyIdPage = async ({params}: Props) => {
 
   return(
     <div className="flex flex-col gap-[18px] px-6 items-center">
-      <h1 className="text-center font-bold text-neutral-800 text-2xl my-6">
-        Words training
-      </h1>
+      <Header title="Words training" />
       <WordSlider words={vocabularyList.words}/>
     </div>
   )

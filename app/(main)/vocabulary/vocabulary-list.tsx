@@ -12,7 +12,11 @@ export const VocabularyList = ({
 }: Props) => {
   
   return (
-    <div className="pt-6 grid grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-4">
+    <div className="flex flex-col gap-5">
+      <h2 className="text-left font-bold text-neutral-800 text-base my-6">
+        Choose the vocabulary list for learning:
+      </h2>
+      <div className="grid grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-4">
         {vocabularyLists.map(vocabularyList => {
           return (
             <Link href={`/vocabulary/${vocabularyList.id}`}>
@@ -27,5 +31,6 @@ export const VocabularyList = ({
           );
         })}
     </div> 
+    </div>
   )
 }
