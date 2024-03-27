@@ -1,11 +1,14 @@
+"use client"
+
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
-import Image from "next/image"
+import Image from "next/image";
 
 type Props = {
   id: number;
   title: string;
-  imageSrc: string
+  imageSrc: string;
+  percentage: number;
   disabled?: boolean;
   active?: boolean;
 }
@@ -16,7 +19,9 @@ export const Card = ({
   imageSrc,
   disabled,
   active,
+  percentage
 }: Props) => {
+
   return (
     <div 
       className={cn(
@@ -40,6 +45,9 @@ export const Card = ({
       />
       <p className="text-neutral-700 text-center font-bold m-3">
         {title}
+      </p>
+      <p>
+        {percentage}
       </p>
     </div>
   )

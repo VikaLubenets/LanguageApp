@@ -1,8 +1,10 @@
 "use client"
 
+import { upserVocabularyProgressUpdate, upserVocabularyProgressCompleted, upserVocabularyProgressUndo } from "@/actions/vocabulary-progress";
 import { words } from "@/db/schema"
 import { Check, Undo2, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { HeaderSlider } from "./header-slider";
 import { WordCard } from "./word-card";
 import { WordResult } from "./word-result";
@@ -20,6 +22,7 @@ export const WordSlider = ({
   const [learnedWords, setLearnedWords] = useState<State>([]);
   const [learningWords, setLearningWords] = useState<State>([]);
   const [showFinalScreen, setShowFinalScreen] = useState(false);
+  const [pending, startTransition] = useTransition();
 
   const handleNextCard = () => {
     if (currentCardIndex === words.length - 1) {
@@ -29,34 +32,51 @@ export const WordSlider = ({
     }
   };;
 
-  const handleUndo = () => {
-    const currentWord = words[currentCardIndex - 1];
-    setLearningWords(learningWords.filter(word => word !== currentWord));
-    setLearnedWords(learnedWords.filter(word => word !== currentWord));
-    setCurrentCardIndex((prevIndex) =>
-      prevIndex === 0 ? 0 : prevIndex - 1
-    );
+  const handleUndo = async () => {
+    startTransition(() => {
+      const nextIndex = currentCardIndex === 0 ? 0 : currentCardIndex - 1;
+      const currentWord = words[nextIndex];
+      upserVocabularyProgressUndo(currentWord.id)
+        .catch(() => toast.error("Something went wrong. Please try again"))
+        .finally(() => {
+          setLearningWords(prevLearningWords => prevLearningWords.filter(word => word.id !== currentWord.id));
+          setLearnedWords(prevLearnedWords => prevLearnedWords.filter(word => word.id !== currentWord.id));
+          setCurrentCardIndex(nextIndex);
+        });
+    });
   };
 
-  const handleLearned = () => {
-    const currentWord = words[currentCardIndex];
-    setLearnedWords([...learnedWords, currentWord]);
-    setLearningWords(learningWords.filter(word => word !== currentWord));
-    handleNextCard();
+  const handleLearned = async () => {
+    startTransition(() => {
+      const currentWord = words[currentCardIndex];
+      upserVocabularyProgressCompleted(currentWord.id)
+        .then(() => {
+          setLearnedWords(prevLearnedWords => [...prevLearnedWords, currentWord]);
+          handleNextCard();
+        })
+        .catch(() => toast.error("Something went wrong. Please try again"));
+    });
   };
-
-  const handleLearning = () => {
-    const currentWord = words[currentCardIndex];
-    setLearningWords([...learningWords, currentWord]);
-    handleNextCard();
+  
+  const handleLearning = async () => {
+    startTransition(() => {
+      const currentWord = words[currentCardIndex];
+      upserVocabularyProgressUpdate(currentWord.id)
+        .then(() => {
+          setLearningWords(prevLearningWords => [...prevLearningWords, currentWord]);
+          handleNextCard();
+        })
+        .catch(() => toast.error("Something went wrong. Please try again"));
+    });
   };
 
   if (showFinalScreen) {
     return (
       <WordResult 
-        learnedWordsCount={learningWords.length} 
-        learningWordsCount={learnedWords.length} 
-      />
+        learnedWordsCount={learnedWords.length}
+        learningWordsCount={learningWords.length} 
+        vocabularyId={words[currentCardIndex].vocabularyId}      
+        />
     );
   }
 
@@ -69,12 +89,12 @@ export const WordSlider = ({
           wordsTotalCount={words.length} 
         />
         <WordCard
-            key={currentCardIndex}
-            word={words[currentCardIndex].word}
-            translationEng={words[currentCardIndex].translationEng}
-            translationRus={words[currentCardIndex].translationRus}
-            imageSrc={words[currentCardIndex].imageSrc || ''}
-            audioSrc={words[currentCardIndex].audioSrc || ''}
+          key={currentCardIndex}
+          word={words[currentCardIndex].word}
+          translationEng={words[currentCardIndex].translationEng}
+          translationRus={words[currentCardIndex].translationRus}
+          imageSrc={words[currentCardIndex].imageSrc || ''}
+          audioSrc={words[currentCardIndex].audioSrc || ''} 
           />
       </div>
       <div className="flex items-center justify-between w-full">

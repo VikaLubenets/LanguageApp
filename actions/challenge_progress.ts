@@ -3,6 +3,7 @@
 import db from "@/db/drizzle";
 import { getUserProgress, getUserSubscription } from "@/db/queries";
 import { challengeProgress, challenges, userProgress } from "@/db/schema";
+import { HEARTS_MAXIMUM, POINTS_FOR_CHALLENGE } from "@/lib/constants";
 import { auth } from "@clerk/nextjs"
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -54,8 +55,8 @@ export const upserChallengeProgress = async (challengeId: number) => {
         );
 
         await db.update(userProgress).set({
-          hearts: Math.min(currentUserProgress.hearts + 1, 5),
-          points: currentUserProgress.points + 10,
+          hearts: Math.min(currentUserProgress.hearts + 1, HEARTS_MAXIMUM),
+          points: currentUserProgress.points + POINTS_FOR_CHALLENGE,
         }).where(eq(userProgress.userId, userId))
 
         revalidatePath("/learn");
@@ -73,7 +74,7 @@ export const upserChallengeProgress = async (challengeId: number) => {
     });
 
     await db.update(userProgress).set({
-      points: currentUserProgress.points + 10,
+      points: currentUserProgress.points + POINTS_FOR_CHALLENGE,
     }).where(eq(userProgress.userId, userId))
 
     revalidatePath("/learn");

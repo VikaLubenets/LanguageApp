@@ -7,7 +7,7 @@ import { auth, currentUser } from "@clerk/nextjs"
 import { challengeProgress, challenges, userProgress } from "@/db/schema"
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { POINTS_TO_REFIL } from "@/lib/constants";
+import { HEARTS_MAXIMUM, HEARTS_MINIMUM, POINTS_TO_REFIL } from "@/lib/constants";
 
 export const upserUseProgress = async (courseId: number) => {
   const { userId } = await auth();
@@ -98,7 +98,7 @@ export const reduceHearts = async (challengeId: number) => {
     }
 
     await db.update(userProgress).set({
-      hearts: Math.max(currentUserProgress.hearts - 1, 0),
+      hearts: Math.max(currentUserProgress.hearts - 1, HEARTS_MINIMUM),
     }).where(eq(userProgress.userId, userId));
 
     revalidatePath("/shop");
@@ -126,7 +126,7 @@ export const refillHearts = async () => {
   }
 
   await db.update(userProgress).set({
-    hearts: 5,
+    hearts: HEARTS_MAXIMUM,
     points: currentUserProgress.points - POINTS_TO_REFIL,
   }).where(eq(userProgress.userId, currentUserProgress.userId));
 

@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { cache } from "react";
 import db from "./drizzle";
 import { 
@@ -11,7 +11,9 @@ import {
   challengeOptions, 
   challengeProgress, 
   userSubscription,
-  vocabularyLists
+  vocabularyLists,
+  words,
+  wordsProgress
 } from "./schema";
 
 export const getCourses = cache(async () => {
@@ -269,7 +271,13 @@ export const getVocabularyLists = cache(async () => {
   const data = await db.query.vocabularyLists.findMany();
 
   return data;
-})
+});
+
+export const getWords = cache(async () => {
+  const data = await db.query.words.findMany();
+
+  return data;
+});
 
 export const getVocabularyListById = cache( async (vocabularyId: number) => {
   const data = await db.query.vocabularyLists.findFirst({
@@ -283,3 +291,64 @@ export const getVocabularyListById = cache( async (vocabularyId: number) => {
   
   return data;
   });
+
+
+export const getVocabularyProgressPercentage = cache(async (vocabularyId?: number) => {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    return null;
+  }
+
+  const userWordsProgress = await db.query.wordsProgress.findMany({
+    where: and(
+      eq(wordsProgress.userId, userId),
+      eq(wordsProgress.learned, true),
+    )
+  });
+
+  if(!userWordsProgress){
+    return null
+  }
+
+  const userLearnedWordIds = userWordsProgress.map(progress => progress.wordId);
+
+  if(userLearnedWordIds.length === 0){
+    return null;
+  }
+
+  const userWords = [];
+
+  for(let id of userLearnedWordIds){
+    const word = await db.query.words.findFirst({
+      where: eq(words.id, id),
+    });
+
+    if(word){
+      userWords.push(word);
+    }
+  }
+
+  let userActiveVocabularyListIds = vocabularyId ? [vocabularyId] : [...new Set(userWords.map(word => word.vocabularyId))];
+
+  const result = [];
+
+  for (const vocabularyListId of userActiveVocabularyListIds) {
+    const wordsInList = await db.query.words.findMany({
+      where: eq(words.vocabularyId, vocabularyListId)
+    });
+
+    const totalWordsCount = wordsInList.length;
+    
+    const learnedWordsCount = userWords.filter(word => word.vocabularyId === vocabularyListId).length;
+
+    const percentage = Math.round((learnedWordsCount / totalWordsCount) * 100);
+
+    result.push({
+      vocabularyListId: vocabularyListId,
+      percentage: percentage,
+    });
+  }
+
+  return result;
+});

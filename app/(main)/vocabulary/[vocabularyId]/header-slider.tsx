@@ -18,7 +18,7 @@ export const HeaderSlider = ({
       </div>
     </div>
     <div className="flex gap-2 h-[20px] text-slate-500 font-bold">
-        {`${learningWordsCount + learnedWordsCount} / ${wordsTotalCount}`}
+        {`${learningWordsCount + learnedWordsCount + 1} / ${wordsTotalCount}`}
     </div>
     <div className="flex gap-2 h-[20px] text-green-500 font-bold">
       <h3>Learned</h3>

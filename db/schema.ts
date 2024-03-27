@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, integer, pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, integer, jsonb, pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const courses = pgTable("courses", {
   id: serial("id").primaryKey(),
@@ -14,8 +14,8 @@ export const coursesRelations = relations(courses, ({ many }) => ({
 
 export const units = pgTable("units", {
   id: serial("id").primaryKey(),
-  title: text("title").notNull(), // Unit 1
-  description: text("description").notNull(), // Learn the basics of spanish
+  title: text("title").notNull(),
+  description: text("description").notNull(),
   courseId: integer("course_id").references(() => courses.id, { onDelete: "cascade" }).notNull(),
   order: integer("order").notNull(),
 });
@@ -101,13 +101,12 @@ export const userProgress = pgTable("user_progress", {
   points: integer("points").notNull().default(0),
 });
 
-export const userProgressRelations = relations(userProgress, ({ one }) => ({
+export const userProgressRelations = relations(userProgress, ({ one, many }) => ({
   activeCourse: one(courses, {
     fields: [userProgress.activeCourseId],
     references: [courses.id],
   }),
 }));
-
 
 export const userSubscription = pgTable("user_subscription", {
   id: serial('id').primaryKey(),
@@ -140,9 +139,25 @@ export const words = pgTable("words", {
   audioSrc: text("audio_src"),
 });
 
-export const wordsRelations = relations(words, ({ one }) => ({
+export const wordsRelations = relations(words, ({ one, many }) => ({
   vocabularyList: one(vocabularyLists, {
     fields: [words.vocabularyId],
     references: [vocabularyLists.id],
+  }),
+  wordsProgress: many(wordsProgress),
+}));
+
+export const wordsProgress = pgTable("words_progress", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  wordId: integer("word_id").references(() => words.id, { onDelete: "cascade" }).notNull(),
+  learned: boolean("learned").notNull().default(false),
+  learning: boolean("learning").notNull().default(false),
+});
+
+export const wordsProgressRelations = relations(wordsProgress, ({ one }) => ({
+  word: one(words, {
+    fields: [wordsProgress.wordId],
+    references: [words.id],
   }),
 }));
