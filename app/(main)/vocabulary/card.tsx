@@ -1,6 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 import { Check } from "lucide-react";
 import Image from "next/image";
 
@@ -29,26 +30,26 @@ export const Card = ({
         disabled && "pointer-events-none opacity-50"
       )}
     >
-      <div className="min-[24px] w-full flex items-center justify-end">
-        {active && (
-          <div className="rounded-md bg-green-600 flex items-center justify-center p-1.5">
-            <Check className="text-white stroke-[4] h-4 w-4"/>
-          </div>
-        )}
+      <div className="min-[24px] w-full flex items-center justify-between">
       </div>
       <Image 
         src={imageSrc} 
         alt={title} 
         height={70} 
         width={93.33}
-        className="rounded-lg drop-shadow-md border object-cover"
+        className="rounded-lg drop-shadow-md border object-cover mt-5"
       />
       <p className="text-neutral-700 text-center font-bold m-3">
         {title}
       </p>
-      <p>
-        {percentage}
-      </p>
+      {active && (
+        <div className="min-[24px] w-full flex items-center flex-col">
+          <Progress value={percentage}  />
+          <p className="text-neutral-700 text-center font-bold m-3 lg:text-base text-sm">
+            {percentage} %
+          </p>
+        </div>
+        )}
     </div>
   )
 };
