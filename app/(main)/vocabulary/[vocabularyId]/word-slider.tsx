@@ -25,7 +25,7 @@ export const WordSlider = ({
   const [pending, startTransition] = useTransition();
 
   const handleNextCard = () => {
-    if (currentCardIndex === words.length - 1) {
+    if (currentCardIndex >= words.length - 1) {
       setShowFinalScreen(true);
     } else {
       setCurrentCardIndex((prevIndex) => prevIndex + 1);
