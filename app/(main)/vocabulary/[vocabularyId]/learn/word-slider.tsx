@@ -1,13 +1,18 @@
 "use client"
 
-import { upserVocabularyProgressUpdate, upserVocabularyProgressCompleted, upserVocabularyProgressUndo } from "@/actions/vocabulary-progress";
+import { Tooltip } from "@nextui-org/tooltip";
+import {
+  upserVocabularyProgressUpdate,
+  upserVocabularyProgressCompleted,
+  upserVocabularyProgressUndo
+} from "@/actions/vocabulary-progress";
 import { words } from "@/db/schema"
 import { Check, Undo2, X } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { HeaderSlider } from "./header-slider";
-import { WordCard } from "./word-card";
+import { WordCard } from "../word-card";
 import { WordResult } from "./word-result";
+import { WordHeader } from "./word-header";
 
 type Props = {
   words: typeof words.$inferSelect[];
@@ -57,7 +62,7 @@ export const WordSlider = ({
         .catch(() => toast.error("Something went wrong. Please try again"));
     });
   };
-  
+
   const handleLearning = async () => {
     startTransition(() => {
       const currentWord = words[currentCardIndex];
@@ -72,21 +77,21 @@ export const WordSlider = ({
 
   if (showFinalScreen) {
     return (
-      <WordResult 
+      <WordResult
         learnedWordsCount={learnedWords.length}
-        learningWordsCount={learningWords.length} 
-        vocabularyId={words[currentCardIndex].vocabularyId}      
-        />
+        learningWordsCount={learningWords.length}
+        vocabularyId={words[currentCardIndex].vocabularyId}
+      />
     );
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-10 h-full w-full items-center mt-5">
       <div className="w-full max-w-[1140px] pr-6 flex flex-col gap-6 items-center justify-center">
-        <HeaderSlider 
-          learningWordsCount={learningWords.length} 
-          learnedWordsCount={learnedWords.length} 
-          wordsTotalCount={words.length} 
+        <WordHeader
+          learningWordsCount={learningWords.length}
+          learnedWordsCount={learnedWords.length}
+          wordsTotalCount={words.length}
         />
         <WordCard
           key={currentCardIndex}
@@ -94,27 +99,33 @@ export const WordSlider = ({
           translationEng={words[currentCardIndex].translationEng}
           translationRus={words[currentCardIndex].translationRus}
           imageSrc={words[currentCardIndex].imageSrc || ''}
-          audioSrc={words[currentCardIndex].audioSrc || ''} 
-          />
+          audioSrc={words[currentCardIndex].audioSrc || ''}
+        />
       </div>
       <div className="flex items-center justify-between w-full">
         {currentCardIndex > 0 && (
-          <Undo2
-            onClick={handleUndo}
-            className="text-slate-500 hover:opacity-75 transition cursor-pointer"
-          />
+          <Tooltip content="Undo previous choise" color="warning">
+            <Undo2
+              onClick={handleUndo}
+              className="text-slate-500 hover:opacity-75 transition cursor-pointer"
+            />
+          </Tooltip>
         )}
         <div className="flex items-center justify-center gap-10 flex-grow">
-          <X 
-            onClick={handleLearning}
-            className="text-rose-500 hover:opacity-75 transition cursor-pointer"
-          />
-          <Check 
-            onClick={handleLearned}
-            className="text-green-500 hover:opacity-75 transition cursor-pointer"
-          />
+          <Tooltip content="Mark as learning" color="danger">
+            <X
+              onClick={handleLearning}
+              className="text-rose-500 hover:opacity-75 transition cursor-pointer"
+            />
+          </Tooltip>
+          <Tooltip content="Mark as learned" color="success">
+            <Check
+              onClick={handleLearned}
+              className="text-green-500 hover:opacity-75 transition cursor-pointer"
+            />
+          </Tooltip>
         </div>
       </div>
-    </>
+    </div>
   )
 }

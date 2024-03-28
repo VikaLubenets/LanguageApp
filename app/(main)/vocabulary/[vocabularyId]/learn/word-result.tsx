@@ -1,7 +1,5 @@
 "use client"
 
-import { getVocabularyProgressPercentage } from "@/db/queries";
-import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 

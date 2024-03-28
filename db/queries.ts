@@ -352,3 +352,86 @@ export const getVocabularyProgressPercentage = cache(async (vocabularyId?: numbe
 
   return result;
 });
+
+export const getTotalUserLearningWordsCount = cache(async () => {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return null;
+  }
+
+  const learningWordsProgress = await db.query.wordsProgress.findMany({
+    where: and(
+      eq(wordsProgress.userId, userId),
+      eq(wordsProgress.learning, true)
+    )
+  });
+
+  return learningWordsProgress.length;
+})
+
+export const getTotalUserLearnedWordsCount = cache(async() => {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return null;
+  }
+
+  const learnedWordsProgress = await db.query.wordsProgress.findMany({
+    where: and(
+      eq(wordsProgress.userId, userId),
+      eq(wordsProgress.learned, true)
+    )
+  });
+
+  return learnedWordsProgress.length;
+})
+
+export const getAllLearnedWords = cache(async () => {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return null;
+  }
+
+  const allUserWords = await db.query.words.findMany({
+    with: {
+      wordsProgress: {
+        where: and(
+          eq(wordsProgress.userId, userId),
+        ),
+      }
+    }
+  });
+
+  const learnedWords = allUserWords.filter(word =>
+    word.wordsProgress.every(progress => progress.learned)
+  );
+
+  return learnedWords;
+})
+
+export const getAllLearningdWords = cache(async () => {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return null;
+  }
+
+  const allUserWords = await db.query.words.findMany({
+    with: {
+      wordsProgress: {
+        where: and(
+          eq(wordsProgress.userId, userId),
+        ),
+      }
+    }
+  });
+
+  const learningWords = allUserWords.filter(word =>
+    word.wordsProgress.every(progress => progress.learning)
+  );
+  
+
+  return learningWords;
+})

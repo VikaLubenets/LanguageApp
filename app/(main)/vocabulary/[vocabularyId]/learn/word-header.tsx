@@ -4,7 +4,7 @@ type Props = {
   wordsTotalCount: number;
 }
 
-export const HeaderSlider = ({
+export const WordHeader = ({
   learningWordsCount,
   learnedWordsCount,
   wordsTotalCount,

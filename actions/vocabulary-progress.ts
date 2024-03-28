@@ -8,7 +8,7 @@ import { auth } from "@clerk/nextjs"
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-export const upserVocabularyProgress = async (wordId: number, learned: boolean, learning: boolean) => {
+export const upserVocabularyProgress = async (wordId: number, learned: boolean, learning: boolean, undo?: boolean) => {
   const { userId } = await auth();
 
   if (!userId) {
@@ -22,7 +22,13 @@ export const upserVocabularyProgress = async (wordId: number, learned: boolean, 
     )
   });
 
+  let previousLearningState = false;
+  let previousLearnedState = false;
+
   if (existingProgress) {
+    previousLearningState = existingProgress.learning;
+    previousLearnedState = existingProgress.learned;
+
     await db.update(wordsProgress).set({
       learned,
       learning,
@@ -50,7 +56,16 @@ export const upserVocabularyProgress = async (wordId: number, learned: boolean, 
     throw new Error("User progress not found");
   }
 
-  const pointsChange = learned ? POINTS_FOR_WORD : -POINTS_FOR_WORD;
+  let pointsChange = 0;
+  if (learned && !undo) {
+    pointsChange = POINTS_FOR_WORD;
+  } else if (undo) {
+    if (previousLearningState) {
+      pointsChange = 0;
+    } else if (previousLearnedState) {
+      pointsChange = -POINTS_FOR_WORD;
+    }
+  }
 
   await db.update(userProgress).set({
     points: currentUserProgress.points + pointsChange,
@@ -71,5 +86,5 @@ export const upserVocabularyProgressCompleted = async (wordId: number) => {
 };
 
 export const upserVocabularyProgressUndo = async (wordId: number) => {
-  await upserVocabularyProgress(wordId, false, true);
+  await upserVocabularyProgress(wordId, false, true, true);
 };

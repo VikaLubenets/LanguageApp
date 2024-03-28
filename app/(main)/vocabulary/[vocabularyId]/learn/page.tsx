@@ -1,8 +1,6 @@
 import { getVocabularyListById } from "@/db/queries";
 import { redirect } from "next/navigation";
-import { Header } from "../header";
-import { VocabularyList } from "./word-list";
-
+import { WordSlider } from "./word-slider"
 
 type Props = {
   params: {
@@ -10,7 +8,8 @@ type Props = {
   }
 }
 
-const VocabularyIdPage = async ({ params }: Props) => {
+const Learn = async ({params}: Props) => {
+
   const vocabularyListData = getVocabularyListById(params.vocabularyId);
 
   const [vocabularyList] = await Promise.all([
@@ -22,11 +21,8 @@ const VocabularyIdPage = async ({ params }: Props) => {
   }
 
   return (
-    <div className="flex flex-col gap-[18px] px-6 items-center">
-      <Header title="Words training" />
-      <VocabularyList words={vocabularyList.words} id={vocabularyList.id}/>
-    </div>
+    <WordSlider words={vocabularyList.words} />
   )
 }
 
-export default VocabularyIdPage;
+export default Learn;
